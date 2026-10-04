@@ -1,7 +1,7 @@
 # AgriPulse: Ultra-Frugal Edge Agro-Climatic Decision Engine
 
 [![Live Demo](https://img.shields.io/badge/Google%20Cloud%20Run-Live%20Demo-4285F4?logo=googlecloud&logoColor=white)](https://agripulse-452096033898.us-central1.run.app)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB.svg?logo=python&logoColor=white)]()
 [![Tests](https://img.shields.io/badge/Tests-17%2F17%20Passing-brightgreen.svg)]()
 [![World Bank Youth Summit 2026](https://img.shields.io/badge/World%20Bank%20Summit-Seoul%202026-0072CE.svg)](https://www.worldbank.org)

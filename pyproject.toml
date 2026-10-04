@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Ultra-lightweight Edge Agricultural Decision Support Engine compiled with JAX/XLA"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "Apache-2.0"}
+license = {text = "MIT"}
 authors = [
     {name = "Sebastian-gfrd", email = "camilomartinez.112000@gmail.com"}
 ]
