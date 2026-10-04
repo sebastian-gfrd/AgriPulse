@@ -1,0 +1,50 @@
+{
+  "coffee_parchment_grade1": {
+    "commodity": "Coffee (Parchment Arabica Grade 1)",
+    "variety": "SL28 / Ruiru 11 (Ondera Central)",
+    "unit": "kg",
+    "currency": "KES",
+    "benchmark_price": 125.0,
+    "fair_floor_price": 118.0,
+    "predatory_threshold": 95.0,
+    "market_source": "WFP HDX Kenya / Nairobi Coffee Exchange (NCE) Auction Baseline",
+    "market_location": "Ondera Cooperative Society Dry Mill",
+    "reported_date": "2026-09-15"
+  },
+  "coffee_parchment_grade2": {
+    "commodity": "Coffee (Parchment Arabica Grade 2)",
+    "variety": "Standard Arabica Mixed",
+    "unit": "kg",
+    "currency": "KES",
+    "benchmark_price": 105.0,
+    "fair_floor_price": 98.0,
+    "predatory_threshold": 80.0,
+    "market_source": "WFP HDX Kenya / NCE Benchmark",
+    "market_location": "Ondera District Center",
+    "reported_date": "2026-09-15"
+  },
+  "dry_maize": {
+    "commodity": "Maize (Dry Grain - Noor Lower Slope)",
+    "variety": "White Maize",
+    "unit": "kg",
+    "currency": "KES",
+    "benchmark_price": 68.81,
+    "fair_floor_price": 63.31,
+    "predatory_threshold": 53.67,
+    "market_source": "UN WFP Food Prices (HDX Resource 517ee1bf)",
+    "market_location": "Central Kenya Regional Market",
+    "reported_date": "2026-08-15"
+  },
+  "dry_beans": {
+    "commodity": "Beans (Dry Rosecoco - Noor Lower Slope)",
+    "variety": "Food Grain",
+    "unit": "kg",
+    "currency": "KES",
+    "benchmark_price": 119.09,
+    "fair_floor_price": 109.56,
+    "predatory_threshold": 92.89,
+    "market_source": "UN WFP Food Prices (HDX Resource 517ee1bf)",
+    "market_location": "Central Kenya Regional Market",
+    "reported_date": "2026-08-15"
+  }
+}

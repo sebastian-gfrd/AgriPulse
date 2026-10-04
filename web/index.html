@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriPulse | Small AI for Development Dashboard</title>
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js & Leaflet.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    /* Retro Nokia 105 Styling */
+    .nokia-phone {
+      width: 290px;
+      height: 580px;
+      background: #1e293b;
+      border-radius: 40px;
+      border: 8px solid #334155;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255,255,255,0.1);
+      position: relative;
+      margin: 0 auto;
+    }
+    .nokia-screen-border {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 25px 18px 12px 18px;
+      border: 3px solid #475569;
+    }
+    .nokia-screen {
+      background: #84cc16;
+      color: #14532d;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      border-radius: 6px;
+      padding: 8px;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .nokia-keypad {
+      padding: 5px 25px;
+    }
+    .nokia-key {
+      background: #334155;
+      color: #cbd5e1;
+      border-radius: 16px;
+      height: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      box-shadow: 0 3px 0 #1e293b;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s;
+    }
+    .nokia-key:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #1e293b;
+    }
+    .nav-tab.active {
+      border-bottom: 3px solid #16a34a;
+      color: #16a34a;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-green-400 flex items-center justify-center text-slate-900 text-xl font-black shadow-md">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-extrabold tracking-tight text-white">AgriPulse</span>
+            <span class="bg-emerald-950 text-emerald-300 text-xs px-2.5 py-0.5 rounded-full border border-emerald-800 font-medium">Small AI Edge Engine</span>
+          </div>
+          <p class="text-xs text-slate-400">World Bank Youth Summit &times; Global AI &amp; Digital Summit &bull; Seoul 2026</p>
+        </div>
+      </div>
+      
+      <!-- Badges -->
+      <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+        <span class="text-xs bg-slate-700/80 px-2.5 py-1 rounded-md text-slate-300 border border-slate-600">
+          <i class="fa-solid fa-microchip text-emerald-400 mr-1"></i> Pure CPU: <strong class="text-white">0.18 ms</strong>
+        </span>
+        <span class="text-xs bg-slate-700/80 px-2.5 py-1 rounded-md text-slate-300 border border-slate-600">
+          <i class="fa-solid fa-weight-hanging text-cyan-400 mr-1"></i> Binary: <strong class="text-white">28.5 KB</strong>
+        </span>
+        <span class="text-xs bg-emerald-900/60 text-emerald-300 px-2.5 py-1 rounded-md border border-emerald-700">
+          <i class="fa-solid fa-shield-halved mr-1"></i> Pass/Fail Guardrail: <strong class="text-white">ACTIVE</strong>
+        </span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 flex space-x-8 text-sm overflow-x-auto">
+      <button onclick="switchTab('phone')" id="tab-phone" class="nav-tab active py-3 text-slate-300 hover:text-emerald-400 transition flex items-center space-x-2 whitespace-nowrap">
+        <i class="fa-solid fa-mobile-screen"></i> <span>Noor's Feature Phone (Nokia 105)</span>
+      </button>
+      <button onclick="switchTab('smartphone')" id="tab-smartphone" class="nav-tab py-3 text-slate-300 hover:text-emerald-400 transition flex items-center space-x-2 whitespace-nowrap">
+        <i class="fa-solid fa-chart-line"></i> <span>Daughter's Edge Analytics (3G Sync)</span>
+      </button>
+      <button onclick="switchTab('cooperative')" id="tab-cooperative" class="nav-tab py-3 text-slate-300 hover:text-emerald-400 transition flex items-center space-x-2 whitespace-nowrap">
+        <i class="fa-solid fa-map-location-dot"></i> <span>Cooperative Epidemic Map</span>
+      </button>
+      <button onclick="switchTab('market')" id="tab-market" class="nav-tab py-3 text-slate-300 hover:text-emerald-400 transition flex items-center space-x-2 whitespace-nowrap">
+        <i class="fa-solid fa-scale-balanced"></i> <span>WFP Market Parity</span>
+      </button>
+      <button onclick="switchTab('audit')" id="tab-audit" class="nav-tab py-3 text-slate-300 hover:text-emerald-400 transition flex items-center space-x-2 whitespace-nowrap">
+        <i class="fa-solid fa-certificate"></i> <span>Hardware &amp; Science Audit</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-6">
+
+    <!-- TAB 1: NOOR'S FEATURE PHONE VIEW -->
+    <section id="panel-phone" class="space-y-6">
+      <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-sm">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-mobile-retro text-emerald-400"></i>
+              Noor's Daily Interaction: Nokia 105 Feature Phone
+            </h2>
+            <p class="text-sm text-slate-400">
+              Noor has no smartphone during weekdays. The system communicates via <strong>standard GSM SMS</strong> (<160 characters) and <strong>interactive Swahili voice playback</strong>.
+            </p>
+          </div>
+          <!-- Scenario Selector -->
+          <div class="flex items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-700">
+            <span class="text-xs text-slate-400 px-2 font-medium">Scenario:</span>
+            <button onclick="fetchPrediction('critical')" id="btn-crit" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white shadow">
+              Critical Outbreak (P &ge; 75%)
+            </button>
+            <button onclick="fetchPrediction('uncertain')" id="btn-uncert" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">
+              Guardrail Signpost (Uncertain)
+            </button>
+            <button onclick="fetchPrediction('stable')" id="btn-stable" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">
+              Crop Safe (P &le; 40%)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- ASCII / CSS Retro Phone Column -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="nokia-phone">
+            <!-- Earpiece speaker slit -->
+            <div class="w-16 h-1.5 bg-slate-700 rounded-full mx-auto mt-4"></div>
+            <!-- Screen container -->
+            <div class="nokia-screen-border">
+              <div class="nokia-screen">
+                <div class="flex justify-between items-center text-[10px] pb-1 border-b border-lime-800/40">
+                  <span>2G &#9679;&#9679;&#9675;&#9675;</span>
+                  <span>105 INBOX</span>
+                  <span>06:30 [&#128267;]</span>
+                </div>
+                <div id="phone-sms-body" class="text-xs leading-snug my-auto overflow-hidden">
+                  Loading message...
+                </div>
+                <div class="flex justify-between text-[10px] pt-1 border-t border-lime-800/40 font-bold">
+                  <span>[ Options ]</span>
+                  <span>[ Back ]</span>
+                </div>
+              </div>
+            </div>
+            <!-- Keypad Buttons -->
+            <div class="nokia-keypad grid grid-cols-3 gap-2">
+              <div class="col-span-3 flex justify-between px-3 py-1">
+                <div class="w-10 h-5 bg-slate-700 rounded-md"></div>
+                <div class="w-8 h-8 rounded-full border-2 border-slate-600 bg-slate-800"></div>
+                <div class="w-10 h-5 bg-slate-700 rounded-md"></div>
+              </div>
+              <div id="nokia-key-1" class="nokia-key hover:bg-emerald-600 active:scale-95 transition cursor-pointer relative border border-emerald-500/50 bg-slate-700 text-white" onclick="toggleAudio()" title="Press 1 or Click to Play Swahili Voice Note">
+                <span class="font-extrabold text-xs text-emerald-300">1</span>
+                <span class="text-[9px] text-emerald-300 font-bold flex items-center gap-0.5"><i class="fa-solid fa-volume-high text-[8px]"></i> Sauti</span>
+              </div>
+              <div class="nokia-key">2 <span>ABC</span></div>
+              <div class="nokia-key">3 <span>DEF</span></div>
+              <div class="nokia-key">4 <span>GHI</span></div>
+              <div class="nokia-key">5 <span>JKL</span></div>
+              <div class="nokia-key">6 <span>MNO</span></div>
+              <div class="nokia-key">7 <span>PQRS</span></div>
+              <div class="nokia-key">8 <span>TUV</span></div>
+              <div class="nokia-key">9 <span>WXYZ</span></div>
+              <div class="nokia-key">* <span>+</span></div>
+              <div class="nokia-key">0 <span>_</span></div>
+              <div class="nokia-key"># <span>&uarr;</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Details & Audio Player Column -->
+        <div class="lg:col-span-7 space-y-5">
+          <!-- Voice Advisory Player -->
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-volume-high text-cyan-400"></i>
+                Spoken Voice Advisory Player (Swahili Audio)
+              </h3>
+              <span class="text-xs bg-cyan-950 text-cyan-300 px-2.5 py-0.5 rounded-full border border-cyan-800">For Low-Literacy Inclusion</span>
+            </div>
+            <p class="text-xs text-slate-400 mb-4">
+              When Noor is out on the upper mountain slope without reading glasses, she presses <strong>'1'</strong> to listen to the automated Swahili voice note synthesized on-device:
+            </p>
+            
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row items-center gap-4">
+              <button onclick="toggleAudio()" id="btn-play-audio" class="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 text-xl flex items-center justify-center shadow-lg transition flex-shrink-0">
+                <i class="fa-solid fa-play" id="icon-play"></i>
+              </button>
+              <div class="flex-grow w-full">
+                <div class="flex justify-between text-xs text-slate-300 font-semibold mb-1">
+                  <span id="audio-title">Ujumbe wa Sauti (Kiswahili)</span>
+                  <span id="audio-status-tag" class="text-emerald-400">Ready</span>
+                </div>
+                <audio id="real-audio-player" class="w-full h-8" controls>
+                  <source id="audio-source" src="/audio/agripulse_critical_swahili.mp3" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            </div>
+          </div>
+
+          <!-- SMS Metadata Card -->
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-envelope-open-text text-amber-400"></i>
+              GSM Single-SMS Compliance Details
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-xs text-slate-400">SMS Length</div>
+                <div id="sms-char-count" class="text-lg font-black text-emerald-400">120 chars</div>
+                <div class="text-[10px] text-slate-500">Limit: 160 chars</div>
+              </div>
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-xs text-slate-400">Billing Units</div>
+                <div class="text-lg font-black text-cyan-400">1 SMS</div>
+                <div class="text-[10px] text-slate-500">Zero Multi-part Cost</div>
+              </div>
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-xs text-slate-400">Target Persona</div>
+                <div class="text-lg font-black text-white">Noor (38y)</div>
+                <div class="text-[10px] text-slate-500">Ondera Highlands</div>
+              </div>
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700">
+                <div class="text-xs text-slate-400">Language</div>
+                <div class="text-lg font-black text-amber-400">Swahili</div>
+                <div class="text-[10px] text-slate-500">Fixed Safe Templates</div>
+              </div>
+            </div>
+
+            <!-- English Translation Box -->
+            <div class="p-3 bg-slate-900/50 rounded-xl border border-slate-700/80 text-xs text-slate-300">
+              <span class="text-slate-400 font-bold uppercase tracking-wider block mb-1">English Translation for Evaluators:</span>
+              <p id="english-translation" class="italic font-mono">
+                Loading English translation...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: DAUGHTER'S SMARTPHONE EDGE ANALYTICS -->
+    <section id="panel-smartphone" class="hidden space-y-6">
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-satellite text-cyan-400"></i>
+              Weekend 3G Synchronization: 30-Day NASA Satellite Telemetry
+            </h2>
+            <p class="text-sm text-slate-400">
+              Runs offline inference in <strong>0.18 ms</strong> on phone CPU without cloud servers.
+            </p>
+          </div>
+          <button onclick="retriggerInference()" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-slate-900 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 self-start md:self-auto transition">
+            <i class="fa-solid fa-bolt"></i> Re-Run Edge CPU Inference
+          </button>
+        </div>
+
+        <!-- Metrics Ribbons -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
+            <span class="text-xs text-slate-400">Total Rainfall (30d)</span>
+            <div id="stat-rain" class="text-xl font-black text-cyan-400">-- mm</div>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
+            <span class="text-xs text-slate-400">Rain Days (>1mm)</span>
+            <div id="stat-wet-days" class="text-xl font-black text-blue-400">-- days</div>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
+            <span class="text-xs text-slate-400">Mean Humidity</span>
+            <div id="stat-rh" class="text-xl font-black text-indigo-400">-- %</div>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
+            <span class="text-xs text-slate-400">Max Temp (Tmax)</span>
+            <div id="stat-tmax" class="text-xl font-black text-amber-400">-- °C</div>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center">
+            <span class="text-xs text-slate-400">Inference Latency</span>
+            <div id="stat-lat" class="text-xl font-black text-emerald-400">0.18 ms</div>
+          </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700" style="height: 340px;">
+          <canvas id="climateChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: COOPERATIVE EPIDEMIC OUTBREAK MAP -->
+    <section id="panel-cooperative" class="hidden space-y-6">
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-map-location-dot text-emerald-400"></i>
+              Ondera Coffee Cooperative: Spatial Contagion Tracking
+            </h2>
+            <p class="text-sm text-slate-400">
+              Aggregates 18-byte binary frames from <strong>80 smallholder members</strong> across the mountain ridge (total bandwidth: <strong>1.4 KB</strong>).
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <span class="inline-flex items-center text-xs px-2.5 py-1 bg-red-900/60 border border-red-700 text-red-300 rounded-lg">
+              <span class="w-2 h-2 rounded-full bg-red-500 mr-1.5"></span> Critical (P &ge; 75%)
+            </span>
+            <span class="inline-flex items-center text-xs px-2.5 py-1 bg-yellow-900/60 border border-yellow-700 text-yellow-300 rounded-lg">
+              <span class="w-2 h-2 rounded-full bg-yellow-500 mr-1.5"></span> Uncertain Guardrail
+            </span>
+            <span class="inline-flex items-center text-xs px-2.5 py-1 bg-green-900/60 border border-green-700 text-green-300 rounded-lg">
+              <span class="w-2 h-2 rounded-full bg-green-500 mr-1.5"></span> Stable
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-8 bg-slate-900 rounded-xl overflow-hidden border border-slate-700" style="height: 440px;">
+            <div id="coopMap" class="w-full h-full"></div>
+          </div>
+          <div class="lg:col-span-4 bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Extensionist Priority Dispatch</h3>
+              <div id="dispatch-list" class="space-y-2 text-xs overflow-y-auto max-h-[340px]">
+                Loading member uplinks...
+              </div>
+            </div>
+            <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400">
+              Total Hectares Threatened: <strong id="threat-ha" class="text-red-400">-- ha</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: WFP MARKET PARITY CALCULATOR -->
+    <section id="panel-market" class="hidden space-y-6">
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2 mb-2">
+          <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+          Market Price Parity Engine (UN WFP / HDX Real Prices)
+        </h2>
+        <p class="text-sm text-slate-400 mb-6">
+          Middlemen exploit information asymmetry at harvest. AgriPulse arms Noor with the official WFP benchmark price before negotiating.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+          <div class="md:col-span-6 space-y-5 bg-slate-900 p-6 rounded-xl border border-slate-700">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase mb-2">
+                Middleman Offer Price: <span id="offer-display" class="text-emerald-400 text-lg font-black">72 KES / kg</span>
+              </label>
+              <input type="range" id="offer-slider" min="50" max="140" value="72" step="1" oninput="updateMarket()" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+              <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                <span>50 KES (Severe Predatory)</span>
+                <span>125 KES (WFP Benchmark)</span>
+                <span>140 KES (Premium)</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase mb-2">
+                Parchment Harvest Volume: <span id="volume-display" class="text-cyan-400 text-base font-black">650 kg</span>
+              </label>
+              <input type="range" id="volume-slider" min="200" max="2000" value="650" step="50" oninput="updateMarket()" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700">
+              <span class="text-xs text-slate-400 block mb-1">Official WFP Benchmark (Nyeri/Ondera Dry Mill):</span>
+              <div class="text-2xl font-black text-white">125.00 KES / kg</div>
+              <span class="text-[10px] text-slate-500">Source: UN WFP Food Prices HDX (Resource 517ee1bf)</span>
+            </div>
+          </div>
+
+          <div class="md:col-span-6 bg-slate-900 p-6 rounded-xl border border-slate-700 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-xs font-bold text-slate-300 uppercase">Analysis Outcome</span>
+                <span id="predatory-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-950 text-red-400 border border-red-800">PREDATORY OFFER</span>
+              </div>
+              <div class="space-y-3">
+                <div class="flex justify-between text-sm py-1 border-b border-slate-800">
+                  <span class="text-slate-400">Price Gap per kg:</span>
+                  <strong id="gap-amount" class="text-red-400">-53.00 KES (-42.4%)</strong>
+                </div>
+                <div class="flex justify-between text-sm py-1 border-b border-slate-800">
+                  <span class="text-slate-400">Total Income Saved / Lost:</span>
+                  <strong id="total-loss" class="text-xl font-black text-red-400">-34,450 KES</strong>
+                </div>
+                <div class="flex justify-between text-xs py-1 text-slate-400">
+                  <span>Equivalent in USD:</span>
+                  <span id="loss-usd">~$265 USD</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+              <span class="text-xs text-amber-400 font-bold block mb-1">Swahili SMS Negotiation Guidance:</span>
+              <p id="market-advice" class="text-xs text-slate-200 font-mono italic">
+                USIKUBALI BEI HII: Dalali anakupunja...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: HARDWARE & SCIENCE AUDIT -->
+    <section id="panel-audit" class="hidden space-y-6">
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-certificate text-emerald-400"></i>
+            Hardware Compliance &amp; Small AI Verification Matrix
+          </h2>
+          <p class="text-sm text-slate-400">
+            Empirical benchmark audited across 1,000 warm CPU inference cycles on the 23,009-day NASA satellite dataset.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+            <div class="text-xs text-slate-400 uppercase font-semibold">Binary Footprint (FP16)</div>
+            <div class="text-3xl font-black text-emerald-400 my-2">28.55 KB</div>
+            <p class="text-xs text-slate-400">Constraint: < 80.00 KB. <strong class="text-emerald-400">PASSED</strong> with 64% safety margin.</p>
+          </div>
+          <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+            <div class="text-xs text-slate-400 uppercase font-semibold">CPU Latency (Single Core)</div>
+            <div class="text-3xl font-black text-cyan-400 my-2">0.183 ms</div>
+            <p class="text-xs text-slate-400">Target: < 2.00 ms. <strong class="text-cyan-400">PASSED</strong> (10x faster than budget requirement).</p>
+          </div>
+          <div class="bg-slate-900 p-5 rounded-xl border border-slate-700">
+            <div class="text-xs text-slate-400 uppercase font-semibold">ROC-AUC / Precision</div>
+            <div class="text-3xl font-black text-amber-400 my-2">0.9931</div>
+            <p class="text-xs text-slate-400">Validation ECE: <strong class="text-amber-400">0.0084</strong> (sub-1% calibration error via Temperature Scaling).</p>
+          </div>
+        </div>
+
+        <!-- Comparative Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left text-slate-300">
+            <thead class="text-slate-400 bg-slate-900 uppercase text-[10px]">
+              <tr>
+                <th class="p-3">Design Dimension</th>
+                <th class="p-3">Conventional Cloud / CV Approach</th>
+                <th class="p-3 text-emerald-400">AgriPulse (Small AI Approach)</th>
+                <th class="p-3">Development Impact for Noor</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/60 bg-slate-900/40">
+              <tr>
+                <td class="p-3 font-bold text-white">Detection Timing</td>
+                <td class="p-3 text-red-400">Post-infection visual symptoms (Day 25+)</td>
+                <td class="p-3 text-emerald-400 font-bold">15 to 25 days pre-symptom biological anticipation</td>
+                <td class="p-3">Enables zero-cost canopy pruning before expensive fungicides are needed.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-white">Device &amp; Compute</td>
+                <td class="p-3 text-red-400">Requires high-end smartphone camera &amp; cloud GPU</td>
+                <td class="p-3 text-emerald-400 font-bold">Runs on feature phone SMS + pure CPU micro-engine</td>
+                <td class="p-3">Functions with Noor's actual device ecology without buying new hardware.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-white">Data Consumption</td>
+                <td class="p-3 text-red-400">~5-10 MB image uploads per scan</td>
+                <td class="p-3 text-emerald-400 font-bold">18-byte binary frame / 4.8 KB weekend sync</td>
+                <td class="p-3">Eliminates high prepaid cellular data costs on remote mountain slopes.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-white">Guardrail &amp; Trust</td>
+                <td class="p-3 text-red-400">Black-box hallucinations / false alarms</td>
+                <td class="p-3 text-emerald-400 font-bold">Temperature-scaled human-in-the-loop signposting</td>
+                <td class="p-3">Protects smallholders from debt by routing ambiguous patterns to extensionists.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-800 border-t border-slate-700 py-4 text-center text-xs text-slate-500">
+    AgriPulse &bull; Built for World Bank Small AI for Development Hackathon (Seoul 2026) &bull; Track: Annex B: Agriculture
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    let currentClimateChart = null;
+    let coopMapInstance = null;
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.add('active');
+
+      ['phone', 'smartphone', 'cooperative', 'market', 'audit'].forEach(t => {
+        document.getElementById('panel-' + t).classList.add('hidden');
+      });
+      document.getElementById('panel-' + tabName).classList.remove('hidden');
+
+      if (tabName === 'cooperative') {
+        setTimeout(initCoopMap, 200);
+      }
+    }
+
+    async function fetchPrediction(statusTarget) {
+      document.querySelectorAll('#btn-crit, #btn-uncert, #btn-stable').forEach(b => {
+        b.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800";
+      });
+      if (statusTarget === 'critical') {
+        document.getElementById('btn-crit').className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 text-white shadow";
+      } else if (statusTarget === 'uncertain') {
+        document.getElementById('btn-uncert').className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-yellow-600 text-white shadow";
+      } else {
+        document.getElementById('btn-stable').className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-green-600 text-white shadow";
+      }
+
+      try {
+        const res = await fetch(`/api/predict?status=${statusTarget}`);
+        const data = await res.json();
+
+        // Update Phone UI
+        document.getElementById('phone-sms-body').innerText = data.sms.swahili;
+        document.getElementById('sms-char-count').innerText = `${data.sms.swahili_length} chars`;
+        document.getElementById('english-translation').innerText = data.sms.english;
+
+        // Update Audio
+        const audioPlayer = document.getElementById('real-audio-player');
+        const audioSource = document.getElementById('audio-source');
+        audioSource.src = data.audio_url;
+        audioPlayer.load();
+
+        // Update Smartphone Stats
+        document.getElementById('stat-rain').innerText = `${data.climatic_drivers.total_rainfall_mm} mm`;
+        document.getElementById('stat-wet-days').innerText = `${data.climatic_drivers.wet_days_count} days`;
+        document.getElementById('stat-rh').innerText = `${data.climatic_drivers.mean_relative_humidity}%`;
+        document.getElementById('stat-tmax').innerText = `${data.climatic_drivers.max_temperature_c}°C`;
+        document.getElementById('stat-lat').innerText = `${data.latency_ms.toFixed(3)} ms`;
+
+        // Update Chart
+        renderChart(data.timeseries);
+
+      } catch (e) {
+        console.error("Error fetching prediction:", e);
+      }
+    }
+
+    function renderChart(ts) {
+      const ctx = document.getElementById('climateChart').getContext('2d');
+      if (currentClimateChart) {
+        currentClimateChart.destroy();
+      }
+
+      currentClimateChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ts.days.map(d => `Day ${d}`),
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Precipitation (mm)',
+              data: ts.rainfall,
+              backgroundColor: 'rgba(6, 182, 212, 0.6)',
+              yAxisID: 'yRain',
+            },
+            {
+              type: 'line',
+              label: 'Max Temperature (°C)',
+              data: ts.tmax,
+              borderColor: '#f59e0b',
+              borderWidth: 2,
+              pointRadius: 0,
+              yAxisID: 'yTemp',
+            },
+            {
+              type: 'line',
+              label: 'Min Temperature (°C)',
+              data: ts.tmin,
+              borderColor: '#3b82f6',
+              borderWidth: 2,
+              pointRadius: 0,
+              yAxisID: 'yTemp',
+            },
+            {
+              type: 'line',
+              label: 'Relative Humidity (%)',
+              data: ts.rh,
+              borderColor: '#818cf8',
+              backgroundColor: 'rgba(129, 140, 248, 0.1)',
+              fill: true,
+              borderDash: [4, 4],
+              pointRadius: 0,
+              yAxisID: 'yRh',
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+            yRain: { type: 'linear', position: 'left', min: 0, max: 40, title: { display: true, text: 'Rain (mm)', color: '#06b6d4' } },
+            yTemp: { type: 'linear', position: 'right', min: 5, max: 35, grid: { drawOnChartArea: false }, title: { display: true, text: 'Temp (°C)', color: '#f59e0b' } },
+            yRh: { type: 'linear', position: 'right', min: 20, max: 100, display: false }
+          },
+          plugins: {
+            legend: { labels: { color: '#cbd5e1' } }
+          }
+        }
+      });
+    }
+
+    async function initCoopMap() {
+      if (coopMapInstance) return;
+
+      coopMapInstance = L.map('coopMap').setView([-0.420, 36.950], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(coopMapInstance);
+
+      try {
+        const res = await fetch('/api/cooperative');
+        const data = await res.json();
+
+        document.getElementById('threat-ha').innerText = `${data.summary.outbreak_epidemiology.total_hectares_threatened} ha`;
+
+        const dispatchList = document.getElementById('dispatch-list');
+        dispatchList.innerHTML = '';
+        data.summary.extensionist_dispatch_priority.forEach((m, idx) => {
+          const badgeClass = m.status_code === 2 ? 'bg-red-950 text-red-400 border-red-800' : 'bg-yellow-950 text-yellow-400 border-yellow-800';
+          dispatchList.innerHTML += `
+            <div class="p-2 rounded-lg bg-slate-800 border border-slate-700 flex justify-between items-center">
+              <div>
+                <strong>${m.farmer_name}</strong>
+                <div class="text-[10px] text-slate-400">${m.elevation_m}m &bull; ${m.crop_hectares} ha</div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] border font-bold ${badgeClass}">${m.risk_score_pct}%</span>
+            </div>
+          `;
+        });
+
+        // Add markers
+        data.geojson.features.forEach(f => {
+          const coords = f.geometry.coordinates;
+          const p = f.properties;
+          const circle = L.circleMarker([coords[1], coords[0]], {
+            radius: p.farmer_id === 1042 ? 10 : 6,
+            fillColor: p.marker_color,
+            color: '#ffffff',
+            weight: p.farmer_id === 1042 ? 3 : 1,
+            fillOpacity: 0.85
+          }).addTo(coopMapInstance);
+
+          circle.bindPopup(`
+            <strong>${p.farmer_name}</strong><br/>
+            Risk Score: <strong>${p.risk_pct}%</strong><br/>
+            Elevation: ${p.elevation_m}m | Size: ${p.hectares} ha<br/>
+            Status: <span style="color:${p.marker_color}"><strong>${p.status_label}</strong></span>
+          `);
+        });
+
+      } catch (e) {
+        console.error("Error loading cooperative map:", e);
+      }
+    }
+
+    async function updateMarket() {
+      const offer = document.getElementById('offer-slider').value;
+      const volume = document.getElementById('volume-slider').value;
+
+      document.getElementById('offer-display').innerText = `${offer} KES / kg`;
+      document.getElementById('volume-display').innerText = `${volume} kg`;
+
+      try {
+        const res = await fetch(`/api/market?offer=${offer}&volume=${volume}`);
+        const data = await res.json();
+
+        document.getElementById('gap-amount').innerText = `${data.gap_amount > 0 ? '-' : '+'}${Math.abs(data.gap_amount).toFixed(2)} KES (${data.gap_percent.toFixed(1)}%)`;
+        document.getElementById('total-loss').innerText = `${data.total_loss > 0 ? '-' : ''}${Math.round(data.total_loss).toLocaleString()} KES`;
+        document.getElementById('loss-usd').innerText = `~$${Math.round(data.total_loss / 130)} USD`;
+        document.getElementById('market-advice').innerText = data.advice_swahili;
+
+        const badge = document.getElementById('predatory-badge');
+        if (data.is_predatory) {
+          badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-950 text-red-400 border border-red-800";
+          badge.innerText = "PREDATORY OFFER";
+        } else if (data.offered_price >= data.fair_floor_price) {
+          badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-950 text-green-400 border border-green-800";
+          badge.innerText = "FAIR COOPERATIVE PRICE";
+        } else {
+          badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-950 text-yellow-400 border border-yellow-800";
+          badge.innerText = "BELOW BENCHMARK";
+        }
+      } catch (e) {
+        console.error("Market update error:", e);
+      }
+    }
+
+    function toggleAudio() {
+      const audio = document.getElementById('real-audio-player');
+      const icon = document.getElementById('icon-play');
+      const statusTag = document.getElementById('audio-status-tag');
+      const key1 = document.getElementById('nokia-key-1');
+
+      if (!audio) return;
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          if (icon) icon.className = "fa-solid fa-pause";
+          if (statusTag) {
+            statusTag.innerText = "Inacheza... (Playing Voice Note)";
+            statusTag.className = "text-emerald-400 font-bold animate-pulse";
+          }
+          if (key1) {
+            key1.classList.add('bg-emerald-600', 'ring-2', 'ring-emerald-400');
+          }
+        }).catch(e => {
+          console.warn("Audio play prevented:", e);
+        });
+      } else {
+        audio.pause();
+        if (icon) icon.className = "fa-solid fa-play";
+        if (statusTag) {
+          statusTag.innerText = "Paused";
+          statusTag.className = "text-slate-400";
+        }
+        if (key1) {
+          key1.classList.remove('bg-emerald-600', 'ring-2', 'ring-emerald-400');
+        }
+      }
+    }
+
+    // Synchronize HTML5 Audio player events with UI
+    const audioEl = document.getElementById('real-audio-player');
+    if (audioEl) {
+      audioEl.addEventListener('play', () => {
+        const icon = document.getElementById('icon-play');
+        const statusTag = document.getElementById('audio-status-tag');
+        const key1 = document.getElementById('nokia-key-1');
+        if (icon) icon.className = "fa-solid fa-pause";
+        if (statusTag) {
+          statusTag.innerText = "Inacheza... (Playing Voice Note)";
+          statusTag.className = "text-emerald-400 font-bold animate-pulse";
+        }
+        if (key1) key1.classList.add('bg-emerald-600', 'ring-2', 'ring-emerald-400');
+      });
+      audioEl.addEventListener('pause', () => {
+        const icon = document.getElementById('icon-play');
+        const statusTag = document.getElementById('audio-status-tag');
+        const key1 = document.getElementById('nokia-key-1');
+        if (icon) icon.className = "fa-solid fa-play";
+        if (statusTag) {
+          statusTag.innerText = "Paused";
+          statusTag.className = "text-slate-400";
+        }
+        if (key1) key1.classList.remove('bg-emerald-600', 'ring-2', 'ring-emerald-400');
+      });
+      audioEl.addEventListener('ended', () => {
+        const icon = document.getElementById('icon-play');
+        const statusTag = document.getElementById('audio-status-tag');
+        const key1 = document.getElementById('nokia-key-1');
+        if (icon) icon.className = "fa-solid fa-play";
+        if (statusTag) {
+          statusTag.innerText = "Ready";
+          statusTag.className = "text-emerald-400";
+        }
+        if (key1) key1.classList.remove('bg-emerald-600', 'ring-2', 'ring-emerald-400');
+      });
+    }
+
+    // Keyboard Shortcut: Pressing '1' on physical keyboard triggers voice note!
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '1' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        toggleAudio();
+      }
+    });
+
+    function retriggerInference() {
+      fetchPrediction('critical');
+    }
+
+    // Init on load
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchPrediction('critical');
+      updateMarket();
+    });
+  </script>
+</body>
+</html>

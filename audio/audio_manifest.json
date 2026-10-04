@@ -1,0 +1,8 @@
+{
+  "stable_swahili": "audio/agripulse_stable_swahili.mp3",
+  "stable_english": "audio/agripulse_stable_english.mp3",
+  "uncertain_swahili": "audio/agripulse_uncertain_swahili.mp3",
+  "uncertain_english": "audio/agripulse_uncertain_english.mp3",
+  "critical_swahili": "audio/agripulse_critical_swahili.mp3",
+  "critical_english": "audio/agripulse_critical_english.mp3"
+}

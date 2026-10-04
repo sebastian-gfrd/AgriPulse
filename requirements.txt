@@ -1,0 +1,10 @@
+# AgriPulse Dependencies
+# World Bank Small AI for Development Hackathon (Seoul 2026)
+
+jax>=0.11.2
+flax>=0.12.10
+optax>=0.2.8
+numpy>=2.0.0
+scipy>=1.15.0
+rich>=13.9.0
+pytest>=9.0.0

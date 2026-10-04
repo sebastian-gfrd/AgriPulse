@@ -1,0 +1,50 @@
+name: AgriPulse CI & Frugal AI Footprint Audit
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-and-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: "pip"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt gTTS
+
+    - name: Run Test Suite (17 tests)
+      env:
+        JAX_PLATFORMS: cpu
+      run: |
+        pytest -v tests/
+
+    - name: Verify Small AI Constraint (<80 KB Binary Footprint)
+      run: |
+        python3 -c "
+        import os
+        fp16_size = os.path.getsize('models/agripulse_edge_fp16.bin')
+        fp32_size = os.path.getsize('models/agripulse_edge_fp32.bin')
+        print(f'FP16 Binary: {fp16_size} bytes ({fp16_size / 1024:.2f} KB)')
+        print(f'FP32 Binary: {fp32_size} bytes ({fp32_size / 1024:.2f} KB)')
+        assert fp16_size < 80 * 1024, f'FP16 model exceeds 80 KB limit: {fp16_size} bytes'
+        print('✅ Frugal Edge AI binary footprint constraint verified!')
+        "
+
+    - name: Verify Pure CPU Latency (<1.0ms on standard runner)
+      env:
+        JAX_PLATFORMS: cpu
+      run: |
+        python3 -m agripulse.benchmark

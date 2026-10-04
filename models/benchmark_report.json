@@ -1,0 +1,35 @@
+{
+  "hardware_environment": {
+    "execution_platform": "Pure CPU (XLA compiled)",
+    "framework": "JAX + Flax Linen",
+    "device_class": "Emulated Budget Smartphone / ARM Cortex-A53"
+  },
+  "model_footprint": {
+    "parameter_count": 14609,
+    "flax_msgpack_kb": 57.86,
+    "edge_fp32_binary_kb": 57.08,
+    "edge_fp16_binary_kb": 28.55,
+    "hackathon_limit_kb": 80.0,
+    "footprint_compliance": "PASSED"
+  },
+  "latency_profile_ms": {
+    "initialization_warmup_ms": 2760.43,
+    "mean_ms": 0.1828,
+    "std_ms": 0.2132,
+    "min_ms": 0.1302,
+    "p50_median_ms": 0.1652,
+    "p90_ms": 0.2269,
+    "p95_ms": 0.2494,
+    "p99_ms": 0.2959,
+    "max_ms": 6.813,
+    "throughput_inferences_per_second": 5471.8,
+    "latency_compliance": "PASSED"
+  },
+  "guardrail_distribution": {
+    "total_evaluated": 1000,
+    "status_0_stable_count": 578,
+    "status_1_uncertain_human_escalation_count": 45,
+    "status_2_critical_action_count": 377,
+    "human_in_the_loop_active": true
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "framework": "AgriPulse Universal 1D Temporal Engine",
+  "core_architecture_invariance": "The 1D-CNN temporal architecture and pure CPU XLA edge runtime remain 100% identical. Scaling to another crop or geography requires only updating the 6-channel NASA POWER/CHIRPS coordinates and the local language SMS template.",
+  "supported_tracks": {
+    "kenya_coffee_rust": {
+      "crop_name": "Arabica Coffee",
+      "target_pathogen": "Hemileia vastatrix (Coffee Leaf Rust)",
+      "target_country": "Kenya",
+      "target_region": "Ondera / Nyeri Highlands",
+      "latitude": -0.42,
+      "longitude": 36.95,
+      "elevation_m": 1850,
+      "incubation_window_days": 30,
+      "biological_latency_pre_visual": "15 to 25 days before urediniospore sporulation",
+      "key_climatic_triggers": "Continuous leaf wetness (RH >= 82% or rain > 1.0mm) + 19.5-25.5\u00b0C",
+      "zero_cost_cultural_actions_swahili": "Punguza matawi na kivuli cha miti ili kuruhusu hewa na jua kukauka majani.",
+      "zero_cost_cultural_actions_french": "\u00c9claircir la canop\u00e9e et tailler les arbres d'ombrage pour ass\u00e9cher le feuillage.",
+      "zero_cost_cultural_actions_english": "Prune upper canopy and shade trees to increase airflow and solar drying.",
+      "institutional_partner": "Ondera Coffee Farmers Cooperative Society"
+    },
+    "cote_divoire_cocoa_blackpod": {
+      "crop_name": "Cacao (Cocoa)",
+      "target_pathogen": "Phytophthora megakarya (Black Pod Rot)",
+      "target_country": "C\u00f4te d'Ivoire",
+      "target_region": "Soubr\u00e9 / San-P\u00e9dro Cocoa Belt",
+      "latitude": 5.78,
+      "longitude": -6.6,
+      "elevation_m": 280,
+      "incubation_window_days": 25,
+      "biological_latency_pre_visual": "10 to 18 days before brown pod necrosis",
+      "key_climatic_triggers": "Relative humidity > 90%, sustained rain accumulation > 120mm/10d, 23-28\u00b0C",
+      "zero_cost_cultural_actions_swahili": "Ondoa kokwa zote zilizoanguka na punguza matawi ya chini ili unyevu upungue.",
+      "zero_cost_cultural_actions_french": "Enlever les cabosses momifi\u00e9es, d\u00e9sherber la base et ouvrir la canop\u00e9e.",
+      "zero_cost_cultural_actions_english": "Remove mummified pods from tree, weed base, and thin low branches.",
+      "institutional_partner": "Conseil du Caf\u00e9-Cacao / World Bank C\u00f4te d'Ivoire Digital Advisory"
+    },
+    "uganda_maize_fall_armyworm": {
+      "crop_name": "White Maize",
+      "target_pathogen": "Spodoptera frugiperda (Fall Armyworm)",
+      "target_country": "Uganda",
+      "target_region": "Mbale / Elgon Slopes",
+      "latitude": 1.07,
+      "longitude": 34.18,
+      "elevation_m": 1140,
+      "incubation_window_days": 20,
+      "biological_latency_pre_visual": "5 to 10 days before leaf whorl window-pane damage",
+      "key_climatic_triggers": "Sudden rain flush following dry spell, degree-days accumulation > 180 DD",
+      "zero_cost_cultural_actions_swahili": "Paka majivu au mchanga kwenye kiini cha mmea na panda Desmodium (push-pull).",
+      "zero_cost_cultural_actions_french": "Appliquer des cendres de bois dans le cornet et pratiquer le push-pull.",
+      "zero_cost_cultural_actions_english": "Apply fine wood ash in leaf whorls and practice push-pull intercropping.",
+      "institutional_partner": "Ministry of Agriculture, Animal Industry and Fisheries (MAAIF) / AgriConnect"
+    }
+  },
+  "scaling_economics": {
+    "model_retraining_time_gpu": "~15 seconds on RTX 5070",
+    "edge_binary_size": "< 30 KB per crop profile",
+    "telemetry_bandwidth": "18 bytes per transmission",
+    "cost_per_farmer_served": "< $0.002 USD / year (pure edge compute)"
+  }
+}

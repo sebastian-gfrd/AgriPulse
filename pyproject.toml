@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agripulse"
+version = "1.0.0"
+description = "Ultra-lightweight Edge Agricultural Decision Support Engine compiled with JAX/XLA"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Sebastian-gfrd", email = "camilomartinez.112000@gmail.com"}
+]
+keywords = ["small-ai", "jax", "edge-ai", "agriculture", "coffee-rust", "world-bank"]
+dependencies = [
+    "jax>=0.11.2",
+    "flax>=0.12.10",
+    "optax>=0.2.8",
+    "numpy>=2.0.0",
+    "scipy>=1.15.0",
+    "rich>=13.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.0",
+]
+
+[project.scripts]
+agripulse-sim = "cli.simulator:main"
+agripulse-train = "agripulse.train:train_agripulse"
+agripulse-bench = "agripulse.benchmark:run_edge_benchmark"
+
+[tool.setuptools.packages.find]
+include = ["agripulse*", "cli*"]

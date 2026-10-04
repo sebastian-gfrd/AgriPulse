@@ -1,0 +1,46 @@
+{
+  "title": "AgriPulse Empirical Highland Coffee Agro-Climatic Dataset",
+  "target_persona": "Noor (Ondera Highlands, Aberdares / Mt. Kenya coffee belt)",
+  "temporal_coverage": "2015-01-01 to 2023-12-31 (9 full continuous years)",
+  "stations_covered": [
+    "Ondera / Nyeri Highlands (Noor's Farm)",
+    "Kirinyaga (Kerugoya coffee belt)",
+    "Kiambu (Upper coffee highlands)",
+    "Murang'a (Gatanga coffee zone)",
+    "Embu (Runyenjes coffee slopes)",
+    "Meru (Imenti South slopes)",
+    "Kisii (Southwestern coffee highlands)"
+  ],
+  "sources": [
+    {
+      "name": "NASA POWER Agroclimatology",
+      "provider": "NASA Langley Research Center",
+      "channels": [
+        "PRECTOTCORR (Precipitation)",
+        "T2M_MAX",
+        "T2M_MIN",
+        "RH2M (Relative Humidity)"
+      ],
+      "resolution": "0.5\u00b0 x 0.5\u00b0 satellite reanalysis",
+      "license": "Public Domain / CC0 Equivalent"
+    },
+    {
+      "name": "UN WFP Food Prices (HDX)",
+      "provider": "United Nations World Food Programme / UN OCHA",
+      "coverage": "28,336 market records across 226 Kenyan markets",
+      "license": "Creative Commons Attribution for Intergovernmental Organisations (CC BY-IGO)"
+    },
+    {
+      "name": "iSDAsoil",
+      "provider": "Innovative Solutions for Decision Agriculture",
+      "coverage": "30m resolution pH and clay fraction for East African volcanic soils",
+      "license": "CC-BY-4.0"
+    }
+  ],
+  "epidemiological_ground_truth": {
+    "pathogen": "Hemileia vastatrix (Coffee Leaf Rust)",
+    "incubation_latency": "15 to 25 days before urediniospore sporulation",
+    "germination_conditions": "Continuous free leaf moisture (RH >= 82% or rain > 1.0mm) + 19.5-25.5\u00b0C"
+  },
+  "limitations_and_gap_analysis": "1. Satellite coarse resolution (0.5\u00b0) smooths hyper-local valley fogs and ridge-top microclimates.\n2. Topographical micro-aspects (sunward vs leeward slopes) receive distinct solar radiation.\n3. Mitigation: System implements Temperature-Scaled Uncertainty Calibration and human signposting."
+}

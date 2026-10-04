@@ -1,0 +1,315 @@
+{
+  "model_name": "AgriPulse",
+  "architecture": "1D-Temporal-CNN (3-stage Residual)",
+  "input_shape": [
+    1,
+    30,
+    6
+  ],
+  "total_parameters": 14609,
+  "calibration": {
+    "temperature": 1.3906288779258755,
+    "method": "Validation Negative Log-Likelihood Minimization",
+    "decision_thresholds": {
+      "stable_risk_max": 0.4,
+      "uncertain_zone": [
+        0.4,
+        0.75
+      ],
+      "critical_action_min": 0.75
+    },
+    "guardrail_fail_safe": {
+      "enabled": true,
+      "swahili_message": "Hali ya hewa si ya kawaida. Wasiliana na afisa ugani au mkuu wa ushirika",
+      "english_message": "Unusual microclimatic pattern. Consult cooperative extension officer."
+    }
+  },
+  "test_performance": {
+    "accuracy": 0.9567504383401519,
+    "precision": 0.9358974358974359,
+    "recall": 0.9577259475218659,
+    "f1": 0.946685878962536,
+    "auc": 0.9930768683780132
+  },
+  "binary_sizes": {
+    "msgpack_kb": 57.86,
+    "edge_bin_fp32_kb": 57.08,
+    "edge_bin_fp16_kb": 28.55,
+    "hardware_constraint_limit_kb": 80.0,
+    "meets_constraint": true
+  },
+  "normalization": {
+    "means": [
+      3.7624824047088623,
+      24.886962890625,
+      13.591554641723633,
+      11.295063018798828,
+      74.255615234375,
+      0.5947538614273071
+    ],
+    "stds": [
+      6.648993015289307,
+      2.9554591178894043,
+      2.1500954627990723,
+      2.5718767642974854,
+      9.706478118896484,
+      0.004113373812288046
+    ]
+  },
+  "param_manifest": [
+    {
+      "path": "bn1/bias",
+      "shape": [
+        16
+      ],
+      "size": 16,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn1/scale",
+      "shape": [
+        16
+      ],
+      "size": 16,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_1/bias",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_1/scale",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_2/bias",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_2/scale",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn3/bias",
+      "shape": [
+        64
+      ],
+      "size": 64,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn3/scale",
+      "shape": [
+        64
+      ],
+      "size": 64,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv1/bias",
+      "shape": [
+        16
+      ],
+      "size": 16,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv1/kernel",
+      "shape": [
+        5,
+        6,
+        16
+      ],
+      "size": 480,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv2_1/bias",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv2_1/kernel",
+      "shape": [
+        3,
+        16,
+        32
+      ],
+      "size": 1536,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv2_2/bias",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv2_2/kernel",
+      "shape": [
+        3,
+        32,
+        32
+      ],
+      "size": 3072,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv3/bias",
+      "shape": [
+        64
+      ],
+      "size": 64,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv3/kernel",
+      "shape": [
+        3,
+        32,
+        64
+      ],
+      "size": 6144,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv_res_proj/bias",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "conv_res_proj/kernel",
+      "shape": [
+        1,
+        16,
+        32
+      ],
+      "size": 512,
+      "dtype": "float32"
+    },
+    {
+      "path": "dense1/bias",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "dense1/kernel",
+      "shape": [
+        64,
+        32
+      ],
+      "size": 2048,
+      "dtype": "float32"
+    },
+    {
+      "path": "dense_out/bias",
+      "shape": [
+        1
+      ],
+      "size": 1,
+      "dtype": "float32"
+    },
+    {
+      "path": "dense_out/kernel",
+      "shape": [
+        32,
+        1
+      ],
+      "size": 32,
+      "dtype": "float32"
+    }
+  ],
+  "bn_manifest": [
+    {
+      "path": "bn1/mean",
+      "shape": [
+        16
+      ],
+      "size": 16,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn1/var",
+      "shape": [
+        16
+      ],
+      "size": 16,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_1/mean",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_1/var",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_2/mean",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn2_2/var",
+      "shape": [
+        32
+      ],
+      "size": 32,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn3/mean",
+      "shape": [
+        64
+      ],
+      "size": 64,
+      "dtype": "float32"
+    },
+    {
+      "path": "bn3/var",
+      "shape": [
+        64
+      ],
+      "size": 64,
+      "dtype": "float32"
+    }
+  ]
+}
